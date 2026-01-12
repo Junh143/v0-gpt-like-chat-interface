@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 존재하지 않는 노래인 경우 비슷한 노래를 추천해주세요.`
 
     const { text } = await generateText({
-      model: groq("llama-3.3-70b-versatile"),
+      model: groq("mixtral-8x7b-32768"),
       prompt: prompt,
     })
 

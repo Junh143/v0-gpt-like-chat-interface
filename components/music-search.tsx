@@ -1,11 +1,10 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { X } from "lucide-react"
+import { X, Mic } from "lucide-react"
 
 interface MusicSearchProps {
   isOpen: boolean
@@ -16,6 +15,7 @@ export default function MusicSearch({ isOpen, onClose }: MusicSearchProps) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
+  const [isListening, setIsListening] = useState(false)
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,13 +37,50 @@ export default function MusicSearch({ isOpen, onClose }: MusicSearchProps) {
     }
   }
 
+  const handleVoiceSearch = async () => {
+    if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+      setResults("브라우저가 음성 인식을 지원하지 않습니다.")
+      return
+    }
+
+    const SpeechRecognition = window.webkitSpeechRecognition || (window as any).SpeechRecognition
+    const recognition = new SpeechRecognition()
+    recognition.lang = "ko-KR"
+    recognition.continuous = false
+    recognition.interimResults = false
+
+    setIsListening(true)
+
+    recognition.onstart = () => {
+      console.log("[v0] 음성 인식 시작")
+    }
+
+    recognition.onresult = (event: any) => {
+      const transcript = Array.from(event.results)
+        .map((result: any) => result[0].transcript)
+        .join("")
+      setQuery(transcript)
+    }
+
+    recognition.onerror = (event: any) => {
+      console.log("[v0] 음성 인식 오류:", event.error)
+      setResults("음성 인식 중 오류가 발생했습니다.")
+    }
+
+    recognition.onend = () => {
+      setIsListening(false)
+    }
+
+    recognition.start()
+  }
+
   if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-lg transition-all duration-300">
       <div className="bg-card rounded-3xl shadow-2xl w-full max-w-md mx-4 p-6 border border-border animate-in fade-in scale-95 duration-300">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-foreground">🎵 음악 검색</h2>
+          <h2 className="text-xl font-bold text-foreground">음악 검색</h2>
           <button onClick={onClose} className="p-1 hover:bg-muted rounded-lg transition-colors">
             <X size={20} className="text-foreground" />
           </button>
@@ -61,13 +98,24 @@ export default function MusicSearch({ isOpen, onClose }: MusicSearchProps) {
             />
           </div>
 
-          <Button
-            type="submit"
-            disabled={isLoading || !query.trim()}
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg py-2 font-medium transition-all"
-          >
-            {isLoading ? "검색 중..." : "검색"}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              type="submit"
+              disabled={isLoading || !query.trim()}
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg py-2 font-medium transition-all"
+            >
+              {isLoading ? "검색 중..." : "검색"}
+            </Button>
+            <Button
+              type="button"
+              onClick={handleVoiceSearch}
+              disabled={isLoading || isListening}
+              className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-lg py-2 font-medium transition-all flex items-center justify-center gap-2"
+            >
+              <Mic size={16} />
+              {isListening ? "듣는 중..." : "음성"}
+            </Button>
+          </div>
         </form>
 
         {results && (
