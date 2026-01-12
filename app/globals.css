@@ -3,45 +3,50 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* 초기 검정 테마로 복원 */
 :root {
-  --background: oklch(0.1 0 0);
+  /* 라이트 모드를 다크 모드로 변경: 배경을 어두운 회색, 텍스트를 흰색으로 설정 */
+  --background: oklch(0.18 0 0);
   --foreground: oklch(0.98 0 0);
-  --card: oklch(0.14 0 0);
+  --card: oklch(0.22 0 0);
   --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.14 0 0);
+  --popover: oklch(0.22 0 0);
   --popover-foreground: oklch(0.98 0 0);
   --primary: oklch(0.98 0 0);
-  --primary-foreground: oklch(0.1 0 0);
-  --secondary: oklch(0.2 0 0);
+  --primary-foreground: oklch(0.18 0 0);
+  --secondary: oklch(0.3 0 0);
   --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.2 0 0);
-  --muted-foreground: oklch(0.6 0 0);
-  --accent: oklch(0.65 0.18 160);
+  --muted: oklch(0.3 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.3 0 0);
   --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.95 0 0);
-  --border: oklch(0.25 0 0);
-  --input: oklch(0.18 0 0);
-  --ring: oklch(0.65 0.18 160);
-  /* 채팅 배경을 반투명 검정으로 변경 */
-  --chat-background: rgba(0, 0, 0, 0.7);
-  --chat-user: oklch(0.2 0 0);
-  --chat-assistant: oklch(0.14 0 0);
-  --radius: 0.75rem;
-  --sidebar: oklch(0.08 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.3 0 0);
+  --input: oklch(0.25 0 0);
+  --ring: oklch(0.45 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.15 0 0);
   --sidebar-foreground: oklch(0.98 0 0);
   --sidebar-primary: oklch(0.98 0 0);
-  --sidebar-primary-foreground: oklch(0.1 0 0);
-  --sidebar-accent: oklch(0.2 0 0);
+  --sidebar-primary-foreground: oklch(0.15 0 0);
+  --sidebar-accent: oklch(0.3 0 0);
   --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(0.25 0 0);
-  --sidebar-ring: oklch(0.65 0.18 160);
+  --sidebar-ring: oklch(0.45 0 0);
+  --radius: 0.625rem;
+}
+
+.dark {
+  /* 다크 모드 불필요 - 기본값이 이미 다크 모드 */
 }
 
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback", sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", monospace;
+  --font-sans: "Geist", "Geist Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -61,9 +66,11 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chat-background: var(--chat-background);
-  --color-chat-user: var(--chat-user);
-  --color-chat-assistant: var(--chat-assistant);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -78,13 +85,100 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* 오로라 관련 애니메이션 및 스타일 전체 삭제 */
-
+/* 모든 요소에 부드러운 트랜지션 효과 추가 */
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 transition-all duration-300 ease-out;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    /* removed inline styles that were overriding dark mode */
   }
+
+  /* 부드러운 텍스트 렌더링 설정 */
+  input,
+  textarea,
+  button,
+  div {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "kern" 1;
+  }
+}
+
+/* 추가 애니메이션: 부드러운 스케일 효과 */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 추가 애니메이션: 부드러운 페이드 효과 */
+@keyframes smoothFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.scale-in-animation {
+  animation: scaleIn 0.4s ease-out;
+}
+
+.smooth-fade-animation {
+  animation: smoothFade 0.5s ease-out;
+}
+
+/* Add loading animation for AI response bubble border */
+@keyframes borderPulse {
+  0%,
+  100% {
+    border-color: oklch(0.3 0 0);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    border-color: oklch(0.5 0 0);
+    box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.2);
+  }
+}
+
+.loading-bubble {
+  animation: borderPulse 2s ease-in-out infinite;
+}
+
+/* 메시지 나타나는 애니메이션 추가 */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* AI 응답 애니메이션 추가 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.message-animation {
+  animation: slideUp 0.3s ease-out;
+}
+
+.ai-response-animation {
+  animation: fadeIn 0.4s ease-out;
 }
