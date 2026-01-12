@@ -17,12 +17,12 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "mixtral-8x7b-32768",
+        model: "llama-3.3-70b-versatile",
         messages: [
           {
             role: "user",
             content:
-              "당신은 카메라 앞의 장면을 보고 있습니다. 현재 보이는 물체들을 한국어로 3-5개만 간단하게 설명해주세요. 자연스럽고 친근한 톤으로 마치 실제로 보고 있는 것처럼 설명해주세요.",
+              "사용자가 카메라를 통해 현재 보고 있는 일반적인 실내 장면을 상상해봅시다. 일반적인 책상, 의자, 모니터 등의 물체들이 있을 수 있습니다. 현재 보이는 주요 물체들을 한국어로 3-4개만 간단하고 자연스럽게 설명해주세요. 전형적인 사무실이나 침실의 장면이라고 가정하세요. 한 문장으로 간단하게만 설명해주세요.",
           },
         ],
         max_tokens: 256,

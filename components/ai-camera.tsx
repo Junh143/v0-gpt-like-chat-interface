@@ -92,10 +92,13 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
       try {
         const utterance = new SpeechSynthesisUtterance(data.description)
         utterance.lang = "ko-KR"
+        utterance.rate = 1
+        utterance.pitch = 1
+        utterance.volume = 1
         speechSynthesis.cancel()
         speechSynthesis.speak(utterance)
       } catch (e) {
-        console.log("[v0] 음성 재생 오류")
+        console.log("[v0] 음성 재생 오류:", e)
       }
     } catch (error) {
       console.error("[v0] 프레임 분석 오류:", error)
