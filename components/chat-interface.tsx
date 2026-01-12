@@ -10,6 +10,7 @@ import ChatMessages from "@/components/chat-messages"
 import LanguageSelector from "@/components/language-selector"
 import VoiceChat from "@/components/voice-chat"
 import DevSettings from "@/components/dev-settings" // Add dev settings import
+import AICamera from "@/components/ai-camera" // Add AI Camera import
 import { generateAIResponse } from "@/lib/ai"
 import { Menu, X } from "lucide-react"
 
@@ -39,7 +40,8 @@ export default function ChatInterface() {
   const [showLanguageSelector, setShowLanguageSelector] = useState(false)
   const [showVoiceChat, setShowVoiceChat] = useState(false) // added voice chat state
   const [showDevSettings, setShowDevSettings] = useState(false) // Add dev settings state
-  const [customSystemPrompt, setCustomSystemPrompt] = useState("") // Add custom prompt state
+  const [showAICamera, setShowAICamera] = useState(false) // Add AI Camera state
+  const [customSystemPrompt, setCustomSystemPrompt] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const playNotificationSound = () => {
@@ -211,6 +213,7 @@ export default function ChatInterface() {
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       <DevSettings isOpen={showDevSettings} onClose={() => setShowDevSettings(false)} onSave={handleDevSettingsSave} />
+      <AICamera isOpen={showAICamera} onClose={() => setShowAICamera(false)} /> {/* Add AI Camera component */}
 
       {showLanguageSelector && (
         <LanguageSelector
@@ -242,7 +245,11 @@ export default function ChatInterface() {
             setShowVoiceChat(true)
             setSidebarOpen(false)
           }}
-          onDevSettings={() => {
+          onAICamera={() => {
+            setShowAICamera(true)
+            setSidebarOpen(false)
+          }} {/* Add AI Camera handler */}
+          onDevSettings={() => {\
             setShowDevSettings(true)
             setSidebarOpen(false)
           }}
@@ -273,7 +280,11 @@ export default function ChatInterface() {
                 setShowVoiceChat(true)
                 setSidebarOpen(false)
               }}
-              onDevSettings={() => {
+              onAICamera={() => {
+                setShowAICamera(true)
+                setSidebarOpen(false)
+              }} {/* Add AI Camera handler */}
+              onDevSettings={() => {\
                 setShowDevSettings(true)
                 setSidebarOpen(false)
               }}
