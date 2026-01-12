@@ -4,7 +4,6 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* 라이트 모드를 다크 모드로 변경: 배경을 어두운 회색, 텍스트를 흰색으로 설정 */
   --background: oklch(0.18 0 0);
   --foreground: oklch(0.98 0 0);
   --card: oklch(0.22 0 0);
@@ -38,6 +37,7 @@
   --sidebar-border: oklch(0.25 0 0);
   --sidebar-ring: oklch(0.45 0 0);
   --radius: 0.625rem;
+  color-scheme: dark;
 }
 
 .dark {
