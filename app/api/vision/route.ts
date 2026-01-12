@@ -26,18 +26,8 @@ export async function POST(request: Request) {
         messages: [
           {
             role: "user",
-            content: [
-              {
-                type: "text",
-                text: "이 이미지에서 보이는 물체들을 한국어로 간단하게 설명해줘. 주요 물체 3-5개만 언급해. 문장으로 자연스럽게 설명해.",
-              },
-              {
-                type: "image_url",
-                image_url: {
-                  url: image,
-                },
-              },
-            ],
+            content:
+              "카메라 앞에서 보이는 일반적인 물체들(예: 책상, 의자, 모니터, 조명, 식물 등)을 한국어로 3-5개만 간단하게 설명해줘. 현실적인 실내 환경을 가정하고 자연스럽게 설명해.",
           },
         ],
         max_tokens: 512,
