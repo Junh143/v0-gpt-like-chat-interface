@@ -11,6 +11,7 @@ import LanguageSelector from "@/components/language-selector"
 import VoiceChat from "@/components/voice-chat"
 import DevSettings from "@/components/dev-settings"
 import AICamera from "@/components/ai-camera"
+import MusicSearch from "@/components/music-search"
 import { generateAIResponse } from "@/lib/ai"
 import { Menu, X } from "lucide-react"
 
@@ -41,6 +42,7 @@ export default function ChatInterface() {
   const [showVoiceChat, setShowVoiceChat] = useState(false)
   const [showDevSettings, setShowDevSettings] = useState(false)
   const [showAICamera, setShowAICamera] = useState(false)
+  const [showMusicSearch, setShowMusicSearch] = useState(false)
   const [customSystemPrompt, setCustomSystemPrompt] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -214,6 +216,7 @@ export default function ChatInterface() {
     <div className="flex h-screen bg-background overflow-hidden">
       <DevSettings isOpen={showDevSettings} onClose={() => setShowDevSettings(false)} onSave={handleDevSettingsSave} />
       <AICamera isOpen={showAICamera} onClose={() => setShowAICamera(false)} />
+      <MusicSearch isOpen={showMusicSearch} onClose={() => setShowMusicSearch(false)} />
 
       {showLanguageSelector && (
         <LanguageSelector
@@ -249,6 +252,10 @@ export default function ChatInterface() {
             setShowAICamera(true)
             setSidebarOpen(false)
           }}
+          onMusicSearch={() => {
+            setShowMusicSearch(true)
+            setSidebarOpen(false)
+          }}
           onDevSettings={() => {
             setShowDevSettings(true)
             setSidebarOpen(false)
@@ -282,6 +289,10 @@ export default function ChatInterface() {
               }}
               onAICamera={() => {
                 setShowAICamera(true)
+                setSidebarOpen(false)
+              }}
+              onMusicSearch={() => {
+                setShowMusicSearch(true)
                 setSidebarOpen(false)
               }}
               onDevSettings={() => {

@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Trash2, Plus, BookOpen, Mic, Settings, Camera } from "lucide-react"
+import { Trash2, Plus, BookOpen, Mic, Settings, Camera, Music } from "lucide-react"
 import { useState, useRef } from "react"
 
 interface Conversation {
@@ -21,6 +21,7 @@ interface ChatSidebarProps {
   onVoiceChat?: () => void
   onDevSettings?: () => void // Add dev settings prop
   onAICamera?: () => void // Add AI Camera prop
+  onMusicSearch?: () => void
 }
 
 export default function ChatSidebar({
@@ -32,7 +33,8 @@ export default function ChatSidebar({
   onLearnLanguage,
   onVoiceChat,
   onDevSettings,
-  onAICamera, // Add AI Camera prop
+  onAICamera,
+  onMusicSearch, // Add AI Camera prop
 }: ChatSidebarProps) {
   const [longPressId, setLongPressId] = useState<string | null>(null)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
@@ -79,6 +81,15 @@ export default function ChatSidebar({
             >
               <Mic size={18} />
               음성 채팅
+            </Button>
+          )}
+          {onMusicSearch && (
+            <Button
+              onClick={onMusicSearch}
+              className="w-full gap-2 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/90"
+            >
+              <Music size={18} />
+              음악 검색
             </Button>
           )}
           {onAICamera && (
