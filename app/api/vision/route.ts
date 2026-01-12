@@ -1,4 +1,3 @@
-import { groq } from "@ai-sdk/groq"
 import { generateText } from "ai"
 
 export async function POST(request: Request) {
@@ -20,7 +19,7 @@ export async function POST(request: Request) {
     console.log("[v0] Groq 모델 호출 시작")
 
     const { text } = await generateText({
-      model: groq("llama-3.3-70b-versatile"),
+      model: "gpt-4o-mini",
       prompt:
         "당신은 카메라 앞의 장면을 보고 있습니다. 현재 보이는 물체들을 한국어로 3-5개만 간단하게 설명해주세요. 자연스럽고 친근한 톤으로 마치 실제로 보고 있는 것처럼 설명해주세요.",
     })
