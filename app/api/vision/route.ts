@@ -28,7 +28,6 @@ export async function POST(request: Request) {
       model: groq("llama-3.3-70b-versatile"),
       prompt:
         "당신은 카메라 앞의 장면을 보고 있습니다. 현재 보이는 물체들을 한국어로 3-5개만 간단하게 설명해주세요. 자연스럽고 친근한 톤으로 마치 실제로 보고 있는 것처럼 설명해주세요. 예: '책상 위에 모니터, 키보드, 마우스가 있고...'",
-      maxTokens: 150,
     })
 
     console.log("[v0] Groq 응답 받음:", text.substring(0, 50))
