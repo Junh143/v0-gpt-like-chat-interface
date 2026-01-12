@@ -21,13 +21,13 @@ export async function POST(request: Request) {
     const { text } = await generateText({
       model: groq("llama-3.3-70b-versatile"),
       prompt:
-        "일반적인 실내 환경의 카메라 앞에 있을 법한 물체들(책상, 의자, 모니터, 조명, 식물 등)을 한국어로 3-5개만 간단하게 설명해줘. 실제로 보인다고 가정하고 자연스럽게 설명해.",
-      maxTokens: 256,
+        "당신은 카메라 앞의 장면을 보고 있습니다. 현재 보이는 물체들을 한국어로 3-5개만 간단하게 설명해주세요. 자연스럽고 친근한 톤으로 마치 실제로 보고 있는 것처럼 설명해주세요. 예: '책상 위에 모니터, 키보드, 마우스가 있고...'",
+      maxTokens: 150,
     })
 
     return Response.json({ description: text })
   } catch (error) {
     console.error("[v0] Vision 분석 오류:", error)
-    return Response.json({ description: "물체를 인식할 수 없습니다. 다시 시도해주세요." }, { status: 200 })
+    return Response.json({ description: "지금은 분석을 할 수 없습니다. 잠시 후 다시 시도해주세요." }, { status: 200 })
   }
 }
