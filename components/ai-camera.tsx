@@ -67,19 +67,26 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
       canvas.height = videoRef.current.videoHeight
       ctx.drawImage(videoRef.current, 0, 0)
 
-      const imageData = canvas.toDataURL("image/jpeg")
+      const imageData = canvas.toDataURL("image/jpeg", 0.8)
+      console.log("[v0] 이미지 데이터 생성됨, 크기:", imageData.length)
 
+      console.log("[v0] Vision API 호출 시작")
       const response = await fetch("/api/vision", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: imageData }),
       })
 
+      console.log("[v0] Vision API 응답 상태:", response.status)
+
       if (!response.ok) {
-        throw new Error("Vision API 오류")
+        const errorText = await response.text()
+        console.error("[v0] Vision API 오류 상태:", response.status, errorText)
+        throw new Error(`Vision API 오류: ${response.status}`)
       }
 
       const data = await response.json()
+      console.log("[v0] Vision 분석 결과:", data.description?.substring(0, 50))
       setDescription(data.description || "분석 중...")
 
       try {

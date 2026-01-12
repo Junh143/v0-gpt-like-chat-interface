@@ -9,14 +9,20 @@ export async function POST(request: Request) {
   try {
     const { image } = await request.json()
 
+    console.log("[v0] Vision API 호출됨, 이미지 크기:", image ? image.length : "없음")
+
     if (!image) {
-      return Response.json({ error: "이미지가 필요합니다" }, { status: 400 })
+      console.error("[v0] 이미지가 전송되지 않음")
+      return Response.json({ description: "이미지를 전송해주세요" }, { status: 400 })
     }
 
     const apiKey = process.env.GROQ_API_KEY
     if (!apiKey) {
-      return Response.json({ error: "API key not configured" }, { status: 500 })
+      console.error("[v0] GROQ_API_KEY가 설정되지 않음")
+      return Response.json({ description: "API 키가 설정되지 않았습니다" }, { status: 500 })
     }
+
+    console.log("[v0] Groq 모델 호출 시작")
 
     const { text } = await generateText({
       model: groq("llama-3.3-70b-versatile"),
@@ -25,9 +31,18 @@ export async function POST(request: Request) {
       maxTokens: 150,
     })
 
+    console.log("[v0] Groq 응답 받음:", text.substring(0, 50))
+
     return Response.json({ description: text })
-  } catch (error) {
-    console.error("[v0] Vision 분석 오류:", error)
-    return Response.json({ description: "지금은 분석을 할 수 없습니다. 잠시 후 다시 시도해주세요." }, { status: 200 })
+  } catch (error: any) {
+    console.error("[v0] Vision 분석 오류 상세:", error.message || error)
+    console.error("[v0] 에러 스택:", error.stack)
+
+    return Response.json(
+      {
+        description: "분석 중 오류가 발생했습니다. 카메라가 제대로 작동하는지 확인해주세요.",
+      },
+      { status: 200 },
+    )
   }
 }
