@@ -9,8 +9,8 @@ import ChatSidebar from "@/components/chat-sidebar"
 import ChatMessages from "@/components/chat-messages"
 import LanguageSelector from "@/components/language-selector"
 import VoiceChat from "@/components/voice-chat"
-import DevSettings from "@/components/dev-settings" // Add dev settings import
-import AICamera from "@/components/ai-camera" // Add AI Camera import
+import DevSettings from "@/components/dev-settings"
+import AICamera from "@/components/ai-camera"
 import { generateAIResponse } from "@/lib/ai"
 import { Menu, X } from "lucide-react"
 
@@ -27,7 +27,7 @@ interface Conversation {
   createdAt: number
   type?: "chat" | "learn"
   language?: string
-  detectedLanguage?: string // added detected language
+  detectedLanguage?: string
 }
 
 export default function ChatInterface() {
@@ -38,9 +38,9 @@ export default function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [showLanguageSelector, setShowLanguageSelector] = useState(false)
-  const [showVoiceChat, setShowVoiceChat] = useState(false) // added voice chat state
-  const [showDevSettings, setShowDevSettings] = useState(false) // Add dev settings state
-  const [showAICamera, setShowAICamera] = useState(false) // Add AI Camera state
+  const [showVoiceChat, setShowVoiceChat] = useState(false)
+  const [showDevSettings, setShowDevSettings] = useState(false)
+  const [showAICamera, setShowAICamera] = useState(false)
   const [customSystemPrompt, setCustomSystemPrompt] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -213,7 +213,7 @@ export default function ChatInterface() {
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       <DevSettings isOpen={showDevSettings} onClose={() => setShowDevSettings(false)} onSave={handleDevSettingsSave} />
-      <AICamera isOpen={showAICamera} onClose={() => setShowAICamera(false)} /> {/* Add AI Camera component */}
+      <AICamera isOpen={showAICamera} onClose={() => setShowAICamera(false)} />
 
       {showLanguageSelector && (
         <LanguageSelector
@@ -248,8 +248,8 @@ export default function ChatInterface() {
           onAICamera={() => {
             setShowAICamera(true)
             setSidebarOpen(false)
-          }} {/* Add AI Camera handler */}
-          onDevSettings={() => {\
+          }}
+          onDevSettings={() => {
             setShowDevSettings(true)
             setSidebarOpen(false)
           }}
@@ -283,8 +283,8 @@ export default function ChatInterface() {
               onAICamera={() => {
                 setShowAICamera(true)
                 setSidebarOpen(false)
-              }} {/* Add AI Camera handler */}
-              onDevSettings={() => {\
+              }}
+              onDevSettings={() => {
                 setShowDevSettings(true)
                 setSidebarOpen(false)
               }}
