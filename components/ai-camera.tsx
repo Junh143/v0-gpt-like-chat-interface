@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
+import { X, Smartphone } from "lucide-react"
 
 interface AICameraProps {
   isOpen: boolean
@@ -15,6 +15,7 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
   const [isRunning, setIsRunning] = useState(false)
   const [description, setDescription] = useState("카메라를 시작하면 물체를 인식합니다...")
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [facingMode, setFacingMode] = useState<"user" | "environment">("user")
   const analysisIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
@@ -22,7 +23,9 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
 
     const startCamera = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode },
+        })
         if (videoRef.current) {
           videoRef.current.srcObject = stream
           setIsRunning(true)
@@ -44,7 +47,12 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
         clearInterval(analysisIntervalRef.current)
       }
     }
-  }, [isOpen])
+  }, [isOpen, facingMode])
+
+  const toggleCamera = async () => {
+    const newFacingMode = facingMode === "user" ? "environment" : "user"
+    setFacingMode(newFacingMode)
+  }
 
   const analyzeFrame = async () => {
     if (!canvasRef.current || !videoRef.current || isAnalyzing) return
@@ -59,10 +67,8 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
       canvas.height = videoRef.current.videoHeight
       ctx.drawImage(videoRef.current, 0, 0)
 
-      // 이미지를 base64로 변환
       const imageData = canvas.toDataURL("image/jpeg")
 
-      // AI에게 이미지 분석 요청
       const response = await fetch("/api/vision", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -76,7 +82,6 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
       const data = await response.json()
       setDescription(data.description || "분석 중...")
 
-      // 텍스트 음성 변환으로 설명 재생
       try {
         const utterance = new SpeechSynthesisUtterance(data.description)
         utterance.lang = "ko-KR"
@@ -99,8 +104,8 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
       analysisIntervalRef.current = null
       setDescription("분석 중지됨")
     } else {
-      analyzeFrame() // 즉시 한 번 분석
-      analysisIntervalRef.current = setInterval(analyzeFrame, 2000) // 2초마다 분석
+      analyzeFrame()
+      analysisIntervalRef.current = setInterval(analyzeFrame, 2000)
     }
   }
 
@@ -108,16 +113,16 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-lg flex items-center justify-center p-4">
-      <div className="bg-card rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border border-border">
-        <div className="bg-gradient-to-r from-primary to-primary/80 p-4 flex items-center justify-between">
+      <div className="bg-black rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-800">
+        <div className="bg-black/80 border-b border-gray-800 p-4 flex items-center justify-between">
           <h2 className="text-white font-bold text-lg">AI 카메라</h2>
-          <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+          <button onClick={onClose} className="p-2 hover:bg-gray-800 rounded-lg transition-colors">
             <X size={20} className="text-white" />
           </button>
         </div>
 
         <div className="p-4 space-y-4">
-          <div className="relative bg-black rounded-2xl overflow-hidden aspect-video">
+          <div className="relative bg-black rounded-2xl overflow-hidden aspect-video border border-gray-800">
             <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
             <canvas ref={canvasRef} className="hidden" />
             {isAnalyzing && (
@@ -127,18 +132,29 @@ export default function AICamera({ isOpen, onClose }: AICameraProps) {
             )}
           </div>
 
-          <div className="bg-muted rounded-2xl p-4 min-h-24 flex items-center justify-center">
-            <p className="text-center text-foreground text-sm leading-relaxed font-sans">{description}</p>
+          <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-4 min-h-24 flex items-center justify-center">
+            <p className="text-center text-gray-200 text-sm leading-relaxed font-sans">{description}</p>
           </div>
 
           <div className="flex gap-2">
             <Button
               onClick={toggleAnalysis}
-              className="flex-1 bg-primary hover:bg-primary/90 text-white font-semibold py-2 rounded-full transition-all"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-full transition-all"
             >
               {analysisIntervalRef.current ? "분석 중지" : "분석 시작"}
             </Button>
-            <Button onClick={onClose} variant="outline" className="flex-1 py-2 rounded-full bg-transparent">
+            <Button
+              onClick={toggleCamera}
+              className="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 rounded-full transition-all flex items-center justify-center gap-2"
+            >
+              <Smartphone size={16} />
+              {facingMode === "user" ? "후면" : "전면"}
+            </Button>
+            <Button
+              onClick={onClose}
+              variant="outline"
+              className="flex-1 py-2 rounded-full bg-gray-900 border-gray-800 text-white hover:bg-gray-800"
+            >
               종료
             </Button>
           </div>
